@@ -1,4 +1,4 @@
-from Vehicle import Vehicle
+from Objects.Vehicle import Vehicle
 
 
 class CAV(Vehicle):
