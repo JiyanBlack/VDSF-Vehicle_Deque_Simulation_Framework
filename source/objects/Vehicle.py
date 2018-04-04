@@ -4,28 +4,33 @@ class Vehicle:
         self.leader = leader  # the vehicle in front of the vehicle
         self.a = 0  # acceleration, in m/s
         self.v = 0  # velocity, in m/s
-        self.max_acc = 3  # maximum acceleration capacity
-        self.max_dec = -3  # maximum deceleration capacity
-        self.comfort_acc = 1  # comfort acceleration
-        self.comfort_dec = -1  # comfort deceleration
-        self.length = 2  # the length of the vehicle
+        self.length = 5  # the length of the vehicle
         self.miniGap = 2  # the minimum gap between vehicles
-        self.v_intend = 22  # intended speed 22 m/s = 80 km/h
         self.simulationStep = simulationStep  # simulation step in ms (1/1000 of a second)
-        self.simTime = 0  # time since simulation starts
+        self.simTime = 0  # time since simulation starts, in ms
         self.records = {}
-        # the position of vehicle, the position of the 1st vehicle's front bumper is 0.
+        self.maxBraking = False  # should the vechile start sunddenly braking
+        # the position of vehicle, the position of the 1st vehicle's rear bumper is 0.
         # For vehicles in the queue, it is negative. For vehile across the stop line, it is positive.
         self.loc = self.calc_loc()
-
-    def calc_acc(self):
-        pass
+        self.set_state = False
+        self.set_loop_num = 0
 
     def set_leader(self, leader):
         self.leader = leader
 
     def calc_loc(self):
         return -self.idx * (self.miniGap + self.length)
+
+    def set_braking_state_after_loops(self, state, loop_num):
+        self.set_state = state
+        self.set_loop_num = loop_num
+
+    def start_sundden_braking(self):
+        self.set_braking_state_after_loops(True, 0)
+
+    def stop_sundden_braking(self):
+        self.set_braking_state_after_loops(False, 0)
 
     def writeInfo(self):
         '''
@@ -37,5 +42,8 @@ class Vehicle:
             map(lambda x: round(x, 3), [self.a, self.v, self.loc]))
         self.simTime += self.simulationStep
 
-    def update(self):
-        pass
+    def base_update(self):
+        if self.set_loop_num <= 0 and (self.maxBraking != self.set_state):
+            self.maxBraking = self.set_state
+        if self.set_loop_num > 0:
+            self.set_loop_num -= 1

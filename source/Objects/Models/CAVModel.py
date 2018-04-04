@@ -1,4 +1,10 @@
 class CAVModel:
+    '''
+    CACC Model from paper: The impact of cooperative adaptive cruise control on traffic-flow characteristics by Van Arem, Bart
+    Van Driel, Cornelia J.G.
+    Visser, Ruben
+    '''
+
     def __init__(self):
         self.k = 0.3  # constant-speed error factor
         self.ka = 1.0  # constant factor in eq3
@@ -17,7 +23,7 @@ class CAVModel:
         '''
         rsafe = (car.v**2) / 2 * ((1 / pcar.max_dec) - (1 / car.max_dec))
         rsys = car.tsys * car.v
-        rref = max(rsafe, rsys, car.miniGap)
+        rref = max(rsafe, rsys, car.safeDistance)
         return rref
 
     def get_aref_d(self, car, pcar):

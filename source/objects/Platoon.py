@@ -1,6 +1,5 @@
 class Platoon:
-    def __init__(self, loop_num):
-        self.loop_num = loop_num
+    def __init__(self):
         self.n = 0
         self.platoon = []
         self.records = {}
@@ -11,9 +10,18 @@ class Platoon:
         self.platoon.append(car)
         self.n += 1
 
-    def deque(self):
+    def run(self, loop_num):
         # run simulation
-        for i in range(self.loop_num):
+        for i in range(loop_num):
+            for idx in range(self.n):
+                self.platoon[idx].update()
+        # save all vehicle information to an object
+        for idx in range(self.n):
+            self.records[idx] = self.platoon[idx].records
+
+    def run_dequeing(self):
+        # run dequeing simulation: that is when the last vehicle pass the position of the first vehicle
+        for i in range(loop_num):
             for idx in range(self.n):
                 self.platoon[idx].update()
         # save all vehicle information to an object
