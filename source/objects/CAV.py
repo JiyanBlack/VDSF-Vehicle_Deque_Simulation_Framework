@@ -7,7 +7,6 @@ class CAV(Vehicle):
         self.tsys = 0.5  # system response time setting for autonomous vehicles in eq6
         self.model = CAVModel
         self.v_intend = v_intend  # intended speed in m/s, not km/h
-        self.safeDistance = self.length + self.miniGap  # safe distance
         self.comfort_acc = 1  # comfort acceleration
         self.comfort_dec = -1  # comfort deceleration
         self.max_acc = 2  # maximum acceleration capacity

@@ -23,14 +23,15 @@ class CAVModel:
         '''
         rsafe = (car.v**2) / 2 * ((1 / pcar.max_dec) - (1 / car.max_dec))
         rsys = car.tsys * car.v
-        rref = max(rsafe, rsys, car.safeDistance)
+        rmin = car.miniGap
+        rref = max(rsafe, rsys, rmin)
         return rref
 
     def get_aref_d(self, car, pcar):
         '''
         get aref_d according to eq3
         '''
-        r = pcar.loc - car.loc  # clearance of the vehicle
+        r = pcar.loc - car.loc - pcar.length  # clearance of the vehicle
         rref = self.get_r_ref(car, pcar)
         return self.ka * pcar.a + self.kv * (pcar.v - car.v) + self.kd * (
             r - rref)
