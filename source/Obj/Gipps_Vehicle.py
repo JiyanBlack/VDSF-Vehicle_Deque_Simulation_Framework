@@ -11,7 +11,10 @@ class Gipps_Vehicle(Vehicle):
                  driver_reaction_time=2 / 3,
                  randomness=False):
         super().__init__(
-            idx, leader, simulationStep=driver_reaction_time * 1000)
+            idx,
+            leader,
+            simulationStep=driver_reaction_time * 1000,
+            max_v=v_intend)
         an = 2
         sn = 7
         bn = -3
@@ -21,8 +24,8 @@ class Gipps_Vehicle(Vehicle):
         else:
             self.an = an
             self.sn = sn
-        self.vi = v_intend
-        self.bn = bn
+        self.vi = self.max_v  # indended speed, in m/s
+        self.bn = bn  # max deceleration
         self.tn = driver_reaction_time  # the reaction time of driver, default is 2/3
         self.b_hat = min(-3.5, (self.bn - 3) / 2)
         self.gipps = gipps
@@ -31,7 +34,6 @@ class Gipps_Vehicle(Vehicle):
         return random.normal(mean, std, 1)[0]
 
     def update(self):
-        self.writeInfo()
         self.base_update()
         if self.maxBraking:
             new_a = self.bn

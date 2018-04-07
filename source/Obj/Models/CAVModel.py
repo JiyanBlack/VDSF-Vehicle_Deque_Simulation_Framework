@@ -15,7 +15,7 @@ class CAVModel:
         '''
         get aref_v according to eq2
         '''
-        return self.k * (car.v_intend - car.v)
+        return self.k * (car.vi - car.v)
 
     def get_r_ref(self, car, pcar):
         '''
