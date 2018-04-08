@@ -17,9 +17,13 @@ class Vehicle:
         self.max_v = max_v
         self.records = {}
         self.delay = -1
+        self.follower = None
 
     def set_leader(self, leader):
         self.leader = leader
+
+    def set_follower(self, follower):
+        self.follower = follower
 
     def calc_loc(self):
         return -self.idx * (self.miniGap + self.length)

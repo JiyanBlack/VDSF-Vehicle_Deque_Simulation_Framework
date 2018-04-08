@@ -17,9 +17,9 @@ class Simulation():
         return math.ceil(time * 1000 / self.simStep)
 
     def run_cav_simluation(self, n, intend_speed):
-        print(
-            "Start running CAV simulation: {}-vehicle-platoon with {}ms gap in {} seconds.".
-            format(n, self.simStep, self.time))
+        # print(
+        #     "Start running CAV simulation: {}-vehicle-platoon with {}ms gap in {} seconds.".
+        #     format(n, self.simStep, self.time))
         loop_num = self.get_cav_loop_num(self.time)
         p = Platoon()
         for i in range(n):
@@ -29,7 +29,7 @@ class Simulation():
                     simulationStep=self.simStep,
                     v_intend=intend_speed))
         p.run(loop_num)
-        print("CAV dequeing simulation finished.")
+        # print("CAV dequeing simulation finished.")
         return p
 
     def run_cav_simluation_with_braking(self,
@@ -38,11 +38,11 @@ class Simulation():
                                         sim_length_after_stop,
                                         stop_veh_idx=0):
         p = self.run_cav_simluation(n, intend_speed)
-        print("Vehicle {} start maximum deceleration...".format(stop_veh_idx))
+        # print("Vehicle {} start maximum deceleration...".format(stop_veh_idx))
         p.platoon[stop_veh_idx].start_sundden_braking()
         new_loop_num = self.get_cav_loop_num(sim_length_after_stop)
         p.run(new_loop_num)
-        print("Braking simulation finishes.")
+        # print("Braking simulation finishes.")
         return p
 
     def get_gipps_loop_num(self, time, driver_reaction_time):
@@ -53,9 +53,9 @@ class Simulation():
                              intend_speed,
                              randomness=False,
                              driver_reaction_time=2 / 3):
-        print(
-            "Start running human-driver simulation (Gipps Model): {}-vehicle-platoon with {}s reaction time in {} seconds.".
-            format(n, driver_reaction_time, self.time))
+        # print(
+        #     "Start running human-driver simulation (Gipps Model): {}-vehicle-platoon with {}s reaction time in {} seconds.".
+        #     format(n, driver_reaction_time, self.time))
         loop_num = self.get_gipps_loop_num(self.time, driver_reaction_time)
         p = Platoon()
         for i in range(n):
@@ -67,7 +67,7 @@ class Simulation():
                     v_intend=intend_speed,
                     randomness=randomness))
         p.run(loop_num)
-        print("Human-driver simulation (Gipps Model) deque finished.")
+        # print("Human-driver simulation (Gipps Model) deque finished.")
         return p
 
     def run_gipps_simluation_with_braking(self,
@@ -79,10 +79,10 @@ class Simulation():
                                           driver_reaction_time=2 / 3):
         p = self.run_gipps_simluation(n, intend_speed, randomness,
                                       driver_reaction_time)
-        print("Vehicle {} start maximum deceleration...".format(stop_veh_idx))
+        # print("Vehicle {} start maximum deceleration...".format(stop_veh_idx))
         p.platoon[stop_veh_idx].start_sundden_braking()
         new_loop_num = self.get_gipps_loop_num(sim_length_after_stop,
                                                driver_reaction_time)
         p.run(new_loop_num)
-        print("Braking simulation finishes.")
+        # print("Braking simulation finishes.")
         return p

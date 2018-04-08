@@ -28,7 +28,7 @@ class Gipps_Vehicle(Vehicle):
         self.bn = bn  # max deceleration
         self.tn = driver_reaction_time  # the reaction time of driver, default is 2/3
         self.b_hat = min(-3.5, (self.bn - 3) / 2)
-        self.gipps = gipps
+        self.model = gipps
 
     def pick_normal(self, mean, std):
         return random.normal(mean, std, 1)[0]
@@ -39,7 +39,7 @@ class Gipps_Vehicle(Vehicle):
             new_a = self.bn
             new_v = self.v + new_a * self.tn
         else:
-            new_v = self.gipps.get_speed(self)
+            new_v = self.model.get_speed(self)
         if new_v < 0:
             new_v = 0
         new_a = (new_v - self.v) / self.tn
