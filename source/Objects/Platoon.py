@@ -18,12 +18,3 @@ class Platoon:
         # save all vehicle information to an object
         for idx in range(self.n):
             self.records[idx] = self.platoon[idx].records
-
-    def run_dequeing(self):
-        # run dequeing simulation: that is when the last vehicle pass the position of the first vehicle
-        for i in range(loop_num):
-            for idx in range(self.n):
-                self.platoon[idx].update()
-        # save all vehicle information to an object
-        for idx in range(self.n):
-            self.records[idx] = self.platoon[idx].records

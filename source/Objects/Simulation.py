@@ -25,7 +25,7 @@ class Simulation():
         for i in range(n):
             p.add_vehicle(
                 CAV(idx=i,
-                    CAVModel=self.cavmodel,
+                    model=self.cavmodel,
                     simulationStep=self.simStep,
                     v_intend=intend_speed))
         p.run(loop_num)
@@ -86,3 +86,7 @@ class Simulation():
         p.run(new_loop_num)
         # print("Braking simulation finishes.")
         return p
+
+    def run_jymodel_simulation(self, n, intend_speed, sim_length_after_stop):
+        loop_num = self.get_cav_loop_num(self.time)
+        p = Platoon

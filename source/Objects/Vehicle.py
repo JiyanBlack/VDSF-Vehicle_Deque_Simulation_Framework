@@ -12,31 +12,27 @@ class Vehicle:
         # the position of vehicle, the position of the 1st vehicle's rear bumper is 0.
         # For vehicles in the queue, it is negative. For vehile across the stop line, it is positive.
         self.loc = self.calc_loc()
-        self.set_state = False
-        self.set_loop_num = 0
         self.max_v = max_v
         self.records = {}
         self.delay = -1
         self.follower = None
+        self.time_pass_zero = -1  # time passes loc = 0 point, in ms
 
     def set_leader(self, leader):
         self.leader = leader
-
-    def set_follower(self, follower):
-        self.follower = follower
+        leader.follower = self
 
     def calc_loc(self):
         return -self.idx * (self.miniGap + self.length)
 
-    def set_braking_state_after_loops(self, state, loop_num):
-        self.set_state = state
-        self.set_loop_num = loop_num
-
     def start_sundden_braking(self):
-        self.set_braking_state_after_loops(True, 0)
+        self.maxBraking = True
 
     def stop_sundden_braking(self):
-        self.set_braking_state_after_loops(False, 0)
+        self.maxBraking = False
+
+    def get_time_pass_zero(self):
+        return self.time_pass_zero / 1000
 
     def writeInfo(self):
         '''
@@ -52,7 +48,5 @@ class Vehicle:
 
     def base_update(self):
         self.writeInfo()
-        if self.set_loop_num <= 0 and (self.maxBraking != self.set_state):
-            self.maxBraking = self.set_state
-        if self.set_loop_num > 0:
-            self.set_loop_num -= 1
+        if self.time_pass_zero < 0 and self.loc >= 0:
+            self.time_pass_zero = self.simTime

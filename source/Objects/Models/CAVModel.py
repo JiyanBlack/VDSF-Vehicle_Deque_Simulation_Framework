@@ -48,4 +48,15 @@ class CAVModel:
         else:
             acc = aref_v
         acc = max(min(acc, car.max_acc), car.max_dec)
-        return acc
+        time = car.simulationStep / 1000
+        if car.maxBraking:
+            new_a = car.max_dec
+        elif car.braking_signal:
+            new_a = car.comf_dec
+        else:
+            new_a = acc
+        new_v = car.v + new_a * time
+        if new_v < 0:
+            new_v = 0
+            new_a = (new_v - car.v) / time
+        return new_a
