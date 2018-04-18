@@ -3,6 +3,8 @@ from Objects.CAV import CAV
 from Objects.Models.CAVModel import CAVModel
 from Objects.Gipps_Vehicle import Gipps_Vehicle
 from Objects.Models.GippsModel import GippsModel
+from Objects.JYCAV import JYCAV
+from Objects.Models.JYModel import JYModel
 import math
 
 
@@ -12,6 +14,7 @@ class Simulation():
         self.simStep = simStep  # time bewteen each simulation step, in ms, or 1/1000 second
         self.cavmodel = CAVModel()  # CAV model
         self.gipps = GippsModel()  # Gipps model
+        self.jymodel = JYModel()  # my model
 
     def get_cav_loop_num(self, time):
         return math.ceil(time * 1000 / self.simStep)
@@ -87,6 +90,26 @@ class Simulation():
         # print("Braking simulation finishes.")
         return p
 
-    def run_jymodel_simulation(self, n, intend_speed, sim_length_after_stop):
+    def run_jymodel_simulation(self,
+                               n,
+                               intend_speed,
+                               sim_length_after_stop=0,
+                               stop_veh_idx=0):
         loop_num = self.get_cav_loop_num(self.time)
-        p = Platoon
+        p = Platoon()
+        for i in range(n):
+            p.add_vehicle(
+                JYCAV(
+                    idx=i,
+                    cavmodel=self.cavmodel,
+                    jymodel=self.jymodel,
+                    simulationStep=self.simStep,
+                    v_intend=intend_speed))
+        p.run(loop_num)
+        # print("CAV dequeing simulation finished.")
+        if sim_length_after_stop > 0:
+            loop_num = self.get_cav_loop_num(sim_length_after_stop)
+            for idx in range(stop_veh_idx + 1):
+                p.platoon[idx].braking_signal_on()
+            p.run(loop_num)
+        return p

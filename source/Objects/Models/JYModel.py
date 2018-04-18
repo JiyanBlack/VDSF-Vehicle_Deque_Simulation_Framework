@@ -1,10 +1,4 @@
-from Objects.Models.CAVModel import CAVModel
-
-
 class JYModel:
-    def __init__(self):
-        self.cavmodel = CAVModel()
-
     def denominator(self, car, dt):
         pcar = car.leader
         clr = pcar.loc - car.loc - pcar.length  # clearance of the vehicle
@@ -16,24 +10,28 @@ class JYModel:
         return numer
 
     def get_acc(self, car):
-        if not car.leader:
+        if not car.leader or car.v == 0:
             return car.comf_acc
-        if not car.connected:
-            return self.cavmodel.get_acc(car)
-        dt = car.simulationStep / 1000
-        deno = self.denominator(car, dt)
-        numer = self.numerator(car, dt)
-        acc = deno / numer
-        acc = max(min(a, car.max_acc), car.max_dec)
+        h = (car.leader.loc - car.loc) / car.v
+        if h <= car.h:
+            dt = car.simulationStep / 1000
+            deno = self.denominator(car, dt)
+            numer = self.numerator(car, dt)
+            acc = deno / numer
+            acc = max(min(acc, car.max_acc), car.max_dec)
+            return acc
+        return car.comf_acc
+
+    def get_new_v(self, car):
         time = car.simulationStep / 1000
-        if car.maxBraking:
-            new_a = car.max_dec
-        elif car.braking_signal:
-            new_a = car.comf_dec
+        if car.braking_timestamp > 0:
+            if car.braking_timestamp < car.simTime:
+                new_a = car.a_at_signal
+            else:
+                new_a = car.comf_dec
         else:
-            new_a = acc
+            new_a = self.get_acc(car)
         new_v = car.v + new_a * time
         if new_v < 0:
             new_v = 0
-            new_a = (new_v - car.v) / time
-        return new_a
+        return new_v
