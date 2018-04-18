@@ -8,7 +8,6 @@ class CAV(Vehicle):
         self.model = model
         self.vi = self.max_v  # intended speed in m/s, not km/h
         self.comf_acc = 0.58  # comfort acceleration
-        self.comf_dec = -0.54  # comfort deceleration
         self.max_acc = 2  # maximum acceleration capacity
         self.max_dec = -3  # maximum deceleration capacity
         self.braking_signal = False  # if receive braking signal, vehicle starts to decelerate at speed and comfort dec.
@@ -29,8 +28,20 @@ class CAV(Vehicle):
             bt += car.max_braking_response_time * 1000
         self.braking_timestamp = bt
 
-    def get_dec_idx(self):
-        pass
+    def get_comf_dec(self):
+        if not self.leader:
+            self.comf_dec = -0.54  # comfort deceleration
+            return
+        vl0 = self.leader.v
+        v0 = self.v
+        alm = self.leader.comf_dec
+        ap = self.a
+        tr = self.max_braking_response_time
+
+        def calc_am(tb):
+            am = (vl0 + alm * tr + alm * tb - v0 - ap * tr) / tb
+            return am
+                    
 
     def update(self):
         self.base_update()
