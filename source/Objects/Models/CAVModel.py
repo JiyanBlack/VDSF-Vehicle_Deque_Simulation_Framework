@@ -35,6 +35,8 @@ class CAVModel:
         rref = self.get_r_ref(car, pcar)
         return self.ka * pcar.a + self.kv * (pcar.v - car.v) + self.kd * (
             r - rref)
+    
+    def get_ared_d_from_source
 
     def get_acc(self, car):
         '''
@@ -49,14 +51,3 @@ class CAVModel:
             acc = aref_v
         acc = max(min(acc, car.max_acc), car.max_dec)
         return acc
-
-    def get_new_v(self, car):
-        time = car.simulationStep / 1000
-        if car.maxBraking:
-            new_a = car.max_dec
-        else:
-            new_a = self.get_acc(car)
-        new_v = car.v + new_a * time
-        if new_v < 0:
-            new_v = 0
-        return new_v

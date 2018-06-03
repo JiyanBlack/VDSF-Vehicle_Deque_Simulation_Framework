@@ -15,9 +15,9 @@ class Gipps_Vehicle(Vehicle):
             leader,
             simulationStep=driver_reaction_time * 1000,
             max_v=v_intend)
-        an = 2
-        sn = 7
-        bn = -3
+        an = 1.7
+        sn = 7 # effective size of the vehicle: 5(length) + 2(mini inter-vechile distance)
+        bn = -2*an
         if randomness:
             self.an = self.pick_normal(an, 0.3)
             self.sn = self.pick_normal(sn, 0.3)
@@ -27,7 +27,7 @@ class Gipps_Vehicle(Vehicle):
         self.vi = self.max_v  # indended speed, in m/s
         self.bn = bn  # max deceleration
         self.tn = driver_reaction_time  # the reaction time of driver, default is 2/3
-        self.b_hat = min(-3.5, (self.bn - 3) / 2)
+        self.b_hat = min(-3.0, (self.bn - 3) / 2)
         self.model = gipps
 
     def pick_normal(self, mean, std):

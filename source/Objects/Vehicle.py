@@ -16,6 +16,7 @@ class Vehicle:
         self.records = {}
         self.delay = -1
         self.follower = None
+        self.prev_loc = 0
         self.time_pass_zero = -1  # time passes loc = 0 point, in ms
 
     def set_leader(self, leader):
@@ -48,5 +49,10 @@ class Vehicle:
 
     def base_update(self):
         self.writeInfo()
+        # judge if hit the previous vehicle
+        if self.leader:
+            spacing = self.leader.loc - self.loc - self.leader.length
+            if spacing <= 0:
+                print("Vehicle", self.idx, "hit the leader vehicle!")
         if self.time_pass_zero < 0 and self.loc >= 0:
             self.time_pass_zero = self.simTime
