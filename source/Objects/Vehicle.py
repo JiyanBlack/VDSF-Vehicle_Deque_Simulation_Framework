@@ -43,8 +43,13 @@ class Vehicle:
         '''
         self.delay = self.simTime / 1000 - (
             self.loc - self.calc_loc()) / self.max_v
+        records = [self.a, self.v, self.loc]
+        headway = 0
+        if self.leader and self.v > 0:
+            headway = (self.leader.loc - self.loc) / self.v
+        records.append(headway)
         self.records[self.simTime] = list(
-            map(lambda x: round(x, 3), [self.a, self.v, self.loc]))
+            map(lambda x: round(x, 3), records))
         self.simTime += self.simulationStep
 
     def base_update(self):

@@ -18,7 +18,7 @@ class Simulation():
     def get_cav_loop_num(self, time):
         return math.ceil(time * 1000 / self.simStep)
 
-    def run_cav_simluation(self, n, intend_speed, ACDA=False):
+    def run_cav_simluation(self, n, intend_speed, ACDA=False, HSR_mode = False):
         loop_num = self.get_cav_loop_num(self.time)
         p = Platoon()
         if ACDA:
@@ -30,7 +30,8 @@ class Simulation():
                 CAV(idx=i,
                     model=themodel,
                     simulationStep=self.simStep,
-                    v_intend=intend_speed))
+                    v_intend=intend_speed,
+                    HSR_mode=HSR_mode))
         p.run(loop_num)
         return p
 
@@ -39,8 +40,9 @@ class Simulation():
                                         intend_speed,
                                         sim_length_after_stop,
                                         stop_veh_idx=0,
-                                        ACDA=False):
-        p = self.run_cav_simluation(n, intend_speed, ACDA)
+                                        ACDA=False,
+                                        HSR_mode = False):
+        p = self.run_cav_simluation(n, intend_speed, ACDA, HSR_mode)
         # print("Vehicle {} start maximum deceleration...".format(stop_veh_idx))
         p.platoon[stop_veh_idx].start_sundden_braking()
         new_loop_num = self.get_cav_loop_num(sim_length_after_stop)

@@ -33,10 +33,7 @@ class CAVModel:
         '''
         r = pcar.loc - car.loc - pcar.length  # clearance of the vehicle
         rref = self.get_r_ref(car, pcar)
-        return self.ka * pcar.a + self.kv * (pcar.v - car.v) + self.kd * (
-            r - rref)
-    
-    def get_ared_d_from_source
+        return self.ka * pcar.a + self.kv * (pcar.v - car.v) + self.kd * (r - rref)
 
     def get_acc(self, car):
         '''

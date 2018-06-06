@@ -13,6 +13,7 @@ class CAV(Vehicle):
         else:
             self.max_acc = 1.34  # maximum acceleration capacity
             self.max_dec = -1.34  # maximum deceleration capacity
+        self.start_timestamp = None # start accelerating timestamp
 
     def update(self):
         self.base_update()
