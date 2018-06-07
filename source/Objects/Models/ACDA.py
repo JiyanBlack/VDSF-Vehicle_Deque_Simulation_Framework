@@ -6,6 +6,7 @@ class ACDAModel:
     '''
     def __init__(self):
         self.t_lag_plus = 0.2
+        self.t_lag_plus_0 = self.t_lag_plus
         self.t_lag_minus = 0.4
         self.k = 0.1  # constant-speed error factor
         self.ka = 1.0  # constant factor in eq3
@@ -69,5 +70,9 @@ class ACDAModel:
                 else:
                     acc = 0
             else:
-                car.start_timestamp = car.simTime
+                time_diff = (car.simTime - 0) / 1000
+                if time_diff <= self.t_lag_plus_0:
+                    acc = 0
+                else:
+                    car.start_timestamp = car.simTime
         return acc

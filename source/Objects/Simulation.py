@@ -8,7 +8,7 @@ import math
 
 
 class Simulation():
-    def __init__(self, time, simStep=100):
+    def __init__(self, time, simStep=10):
         self.time = time  # simulation time in seconds
         self.simStep = simStep  # time bewteen each simulation step, in ms, or 1/1000 second
         self.cavmodel = CAVModel()  # CAV model
