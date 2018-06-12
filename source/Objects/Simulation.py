@@ -4,34 +4,37 @@ from Objects.Models.CAVModel import CAVModel
 from Objects.Models.ACDA import ACDAModel
 from Objects.Gipps_Vehicle import Gipps_Vehicle
 from Objects.Models.GippsModel import GippsModel
+from Objects.Models.IDM import IDM
 import math
 
 
 class Simulation():
-    def __init__(self, time, simStep=10):
+    def __init__(self, time, avStep = 100):
         self.time = time  # simulation time in seconds
-        self.simStep = simStep  # time bewteen each simulation step, in ms, or 1/1000 second
         self.cavmodel = CAVModel()  # CAV model
         self.gipps = GippsModel()  # Gipps model
         self.acda = ACDAModel()  # ACDA model
+        self.idm = IDM()
+        self.avStep = avStep
+        self.gippsStep = 2/3 * 1000
 
     def get_cav_loop_num(self, time):
-        return math.ceil(time * 1000 / self.simStep)
+        return math.ceil(time * 1000 / self.avStep)
 
-    def run_cav_simluation(self, n, intend_speed, ACDA=False, HSR_mode = False):
+    def run_cav_simluation(self, n, intend_speed, ACDA=False, maxAcc = []):
         loop_num = self.get_cav_loop_num(self.time)
         p = Platoon()
         if ACDA:
-            themodel  = self.acda
+            themodel  = self.idm
         else:
             themodel = self.cavmodel
         for i in range(n):
             p.add_vehicle(
                 CAV(idx=i,
                     model=themodel,
-                    simulationStep=self.simStep,
+                    simulationStep=self.avStep,
                     v_intend=intend_speed,
-                    HSR_mode=HSR_mode))
+                    maxAcc = maxAcc))
         p.run(loop_num)
         return p
 

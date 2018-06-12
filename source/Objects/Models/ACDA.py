@@ -8,10 +8,10 @@ class ACDAModel:
         self.t_lag_plus = 0.2
         self.t_lag_plus_0 = self.t_lag_plus
         self.t_lag_minus = 0.4
-        self.k = 0.1  # constant-speed error factor
-        self.ka = 1.0  # constant factor in eq3
+        self.k = 0.05  # constant-speed error factor
+        self.ka = 0  # constant factor in eq3
         self.kv = 0.58  # constant factor in eq3
-        self.kd = 0.1  # constant factor in eq3
+        self.kd = 0.07  # constant factor in eq3
         self.default_tsys = 1.4
 
     def get_mini_spacing(self, car):
