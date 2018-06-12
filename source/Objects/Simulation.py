@@ -1,7 +1,6 @@
 from Objects.Platoon import Platoon
 from Objects.CAV import CAV
 from Objects.Models.CAVModel import CAVModel
-from Objects.Models.ACDA import ACDAModel
 from Objects.Gipps_Vehicle import Gipps_Vehicle
 from Objects.Models.GippsModel import GippsModel
 from Objects.Models.IDM import IDM
@@ -13,8 +12,7 @@ class Simulation():
         self.time = time  # simulation time in seconds
         self.cavmodel = CAVModel()  # CAV model
         self.gipps = GippsModel()  # Gipps model
-        self.acda = ACDAModel()  # ACDA model
-        self.idm = IDM()
+        self.idm = IDM() # IDM 
         self.avStep = avStep
         self.gippsStep = 2/3 * 1000
 

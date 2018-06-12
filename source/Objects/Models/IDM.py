@@ -7,7 +7,7 @@ Cruise Control Dynamic Responses Using Experimental Data
     '''
     def __init__(self):
         self.sigma = 4
-        self.T = 1.2
+        self.T = 1.0
 
     def get_time_gap(self, car):
         return self.T + car.t_lag_minus

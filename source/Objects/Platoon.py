@@ -3,6 +3,8 @@ class Platoon:
         self.n = 0
         self.platoon = []
         self.records = {}
+        self.delays = []
+        self.vehPass = 0
 
     def add_vehicle(self, car):
         if self.n > 0:
@@ -16,5 +18,11 @@ class Platoon:
             for idx in range(self.n):
                 self.platoon[idx].update()
         # save all vehicle information to an object
+        lastUpdate = sorted(self.platoon[idx].records.keys())[-1]
         for idx in range(self.n):
-            self.records[idx] = self.platoon[idx].records
+            idxLoc = self.platoon[idx].records[lastUpdate][2]
+            if  idxLoc > 0:
+                self.records[idx] = self.platoon[idx].records
+                self.vehPass += 1
+                self.delays.append(self.platoon[idx].delay)
+        self.platoon = None
