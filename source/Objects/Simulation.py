@@ -3,36 +3,44 @@ from Objects.CAV import CAV
 from Objects.Models.CAVModel import CAVModel
 from Objects.Gipps_Vehicle import Gipps_Vehicle
 from Objects.Models.GippsModel import GippsModel
+from Objects.Models.GippsModel import GippsCongestModel
 from Objects.Models.IDM import IDM
 import math
 
 
 class Simulation():
-    def __init__(self, time, avStep = 100):
+    def __init__(self, time, avStep=100):
         self.time = time  # simulation time in seconds
         self.cavmodel = CAVModel()  # CAV model
         self.gipps = GippsModel()  # Gipps model
-        self.idm = IDM() # IDM 
+        self.idm = IDM()  # IDM
+        self.gippsCongest = GippsCongestModel()
         self.avStep = avStep
-        self.gippsStep = 2/3 * 1000
+        self.av = self.idm
+        self.human = self.gipps
+        self.cav = self.cavmodel
 
     def get_cav_loop_num(self, time):
         return math.ceil(time * 1000 / self.avStep)
 
-    def run_cav_simluation(self, n, intend_speed, ACDA=False, maxAcc = []):
+    def run_cav_simluation(self, n, intend_speed, connect=False, maxAcc=[]):
         loop_num = self.get_cav_loop_num(self.time)
         p = Platoon()
-        if ACDA:
-            themodel  = self.idm
+        if connect:
+            themodel = self.cav
         else:
-            themodel = self.cavmodel
+            themodel = self.av
+        leader = None
+
         for i in range(n):
-            p.add_vehicle(
-                CAV(idx=i,
-                    model=themodel,
-                    simulationStep=self.avStep,
-                    v_intend=intend_speed,
-                    maxAcc = maxAcc))
+            newcar = CAV(idx=i,
+                model=themodel,
+                simulationStep=self.avStep,
+                v_intend=intend_speed,
+                leader=leader,
+                maxAcc=maxAcc)
+            p.add_vehicle(newcar)
+            leader = newcar
         p.run(loop_num)
         return p
 
@@ -42,7 +50,7 @@ class Simulation():
                                         sim_length_after_stop,
                                         stop_veh_idx=0,
                                         ACDA=False,
-                                        HSR_mode = False):
+                                        HSR_mode=False):
         p = self.run_cav_simluation(n, intend_speed, ACDA, HSR_mode)
         # print("Vehicle {} start maximum deceleration...".format(stop_veh_idx))
         p.platoon[stop_veh_idx].start_sundden_braking()
@@ -64,14 +72,17 @@ class Simulation():
         #     format(n, driver_reaction_time, self.time))
         loop_num = self.get_gipps_loop_num(self.time, driver_reaction_time)
         p = Platoon()
+        leader = None
         for i in range(n):
-            p.add_vehicle(
-                Gipps_Vehicle(
-                    idx=i,
-                    gipps=self.gipps,
-                    driver_reaction_time=driver_reaction_time,
-                    v_intend=intend_speed,
-                    randomness=randomness))
+            newcar = Gipps_Vehicle(
+                idx=i,
+                gipps=self.gipps,
+                driver_reaction_time=driver_reaction_time,
+                leader=leader,
+                v_intend=intend_speed,
+                randomness=randomness)
+            p.add_vehicle(newcar)
+            leader = newcar
         p.run(loop_num)
         # print("Human-driver simulation (Gipps Model) deque finished.")
         return p

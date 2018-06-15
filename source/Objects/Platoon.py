@@ -7,8 +7,6 @@ class Platoon:
         self.vehPass = 0
 
     def add_vehicle(self, car):
-        if self.n > 0:
-            car.set_leader(self.platoon[self.n - 1])
         self.platoon.append(car)
         self.n += 1
 
@@ -25,4 +23,3 @@ class Platoon:
                 self.records[idx] = self.platoon[idx].records
                 self.vehPass += 1
                 self.delays.append(self.platoon[idx].delay)
-        self.platoon = None

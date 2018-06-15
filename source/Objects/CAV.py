@@ -23,9 +23,8 @@ class CAV(Vehicle):
         new_a = self.max_dec
         if not self.maxBraking:
             new_a = self.model.get_acc(self)
-        new_v = self.v + new_a * time
-        new_loc = self.loc + new_v * time
-        self.prev_loc = self.loc
+        new_v = self.v + time/2 * (new_a + self.a) 
+        new_loc = self.loc + time/2 * (new_v + self.v) 
         self.a = new_a
         self.v = new_v
         self.loc = new_loc
