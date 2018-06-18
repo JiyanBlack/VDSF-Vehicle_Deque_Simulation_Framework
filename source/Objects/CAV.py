@@ -1,20 +1,13 @@
 from Objects.Vehicle import Vehicle
 
-
 class CAV(Vehicle):
-    def __init__(self, idx, model, simulationStep, v_intend, leader=None, maxAcc=[]):
-        super().__init__(idx, leader, simulationStep, max_v=v_intend)
-        self.tsys = 0.5  # system response time setting for autonomous vehicles in eq6
+    def __init__(self, idx, model, simulationStep, leader=None, paras={}):
+        super().__init__(idx, leader, simulationStep, max_v=paras['v_intend'])
+        self.tsys = paras['tsys']  # system response time setting for autonomous vehicles in eq6
         self.model = model
-        self.t_lag_plus = 0.2
-        self.t_lag_minus = 0.4
         self.vi = self.max_v  # intended speed in m/s, not km/h
-        if maxAcc:
-            self.max_acc = maxAcc[0]  # maximum acceleration capacity
-            self.max_dec = maxAcc[1]  # maximum deceleration capacity
-        else:
-            self.max_acc = 1.34  # maximum acceleration capacity
-            self.max_dec = -1.34  # maximum deceleration capacity
+        self.max_acc = paras['max_acc']  # maximum acceleration capacity
+        self.max_dec = paras['max_dec']  # maximum deceleration capacity
         self.start_timestamp = None # start accelerating timestamp
 
     def update(self):

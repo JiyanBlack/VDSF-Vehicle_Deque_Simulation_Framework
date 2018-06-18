@@ -1,10 +1,11 @@
 from Objects.Platoon import Platoon
 from Objects.CAV import CAV
 from Objects.Models.CAVModel import CAVModel
-from Objects.Gipps_Vehicle import Gipps_Vehicle
 from Objects.Models.GippsModel import GippsModel
-from Objects.Models.GippsModel import GippsCongestModel
 from Objects.Models.IDM import IDM
+from Objects.IDMCar import IDMAV
+from Objects.IDMCar import IDMHumanVehicle
+from Objects.Gipps_Vehicle import Gipps_Vehicle
 import math
 
 
@@ -14,37 +15,60 @@ class Simulation():
         self.cavmodel = CAVModel()  # CAV model
         self.gipps = GippsModel()  # Gipps model
         self.idm = IDM()  # IDM
-        self.gippsCongest = GippsCongestModel()
         self.avStep = avStep
         self.av = self.idm
-        self.human = self.gipps
+        self.human = self.idm
         self.cav = self.cavmodel
 
     def get_cav_loop_num(self, time):
         return math.ceil(time * 1000 / self.avStep)
 
-    def run_cav_simluation(self, n, intend_speed, connect=False, maxAcc=[]):
+    def run_av_simulation(self, n, paras):
         loop_num = self.get_cav_loop_num(self.time)
         p = Platoon()
-        if connect:
-            themodel = self.cav
-        else:
-            themodel = self.av
         leader = None
-
         for i in range(n):
-            newcar = CAV(idx=i,
-                model=themodel,
+            newcar = IDMAV(idx=i,
+                model=self.av,
                 simulationStep=self.avStep,
-                v_intend=intend_speed,
                 leader=leader,
-                maxAcc=maxAcc)
+                paras=paras)
             p.add_vehicle(newcar)
             leader = newcar
         p.run(loop_num)
         return p
 
-    def run_cav_simluation_with_braking(self,
+    def run_human_simulation(self, n, paras):
+        loop_num = self.get_cav_loop_num(self.time)
+        p = Platoon()
+        leader = None
+        for i in range(n):
+            newcar = IDMHumanVehicle(idx=i,
+                model=self.human,
+                simulationStep=self.avStep,
+                leader=leader,
+                paras=paras)
+            p.add_vehicle(newcar)
+            leader = newcar
+        p.run(loop_num)
+        return p
+    
+    def run_cav_simulation(self, n, paras):
+        loop_num = self.get_cav_loop_num(self.time)
+        p = Platoon()
+        leader = None
+        for i in range(n):
+            newcar = CAV(idx=i,
+                model=self.cavmodel,
+                simulationStep=self.avStep,
+                leader=leader,
+                paras=paras)
+            p.add_vehicle(newcar)
+            leader = newcar
+        p.run(loop_num)
+        return p
+
+    def run_cav_simulation_with_braking(self,
                                         n,
                                         intend_speed,
                                         sim_length_after_stop,
@@ -62,7 +86,7 @@ class Simulation():
     def get_gipps_loop_num(self, time, driver_reaction_time):
         return math.ceil(time / driver_reaction_time)
 
-    def run_gipps_simluation(self,
+    def run_gipps_simulation(self,
                              n,
                              intend_speed,
                              randomness=False,
@@ -87,7 +111,7 @@ class Simulation():
         # print("Human-driver simulation (Gipps Model) deque finished.")
         return p
 
-    def run_gipps_simluation_with_braking(self,
+    def run_gipps_simulation_with_braking(self,
                                           n,
                                           intend_speed,
                                           sim_length_after_stop,
