@@ -23,7 +23,7 @@ class IDMHumanVehicle(Vehicle):
         self.loc = new_loc
 
 class IDMAV(Vehicle):
-    def __init__(self, idx, model, simulationStep,  leader=None, paras={}):
+    def __init__(self, idx, model, simulationStep, leader=None, paras={}):
         super().__init__(idx, leader, simulationStep, max_v=paras['v_intend'])
         self.T = paras['AV_T'] # bumper-to-bumper headway to keep
         self.model = model

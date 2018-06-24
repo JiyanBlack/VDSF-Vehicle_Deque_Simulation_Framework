@@ -30,7 +30,7 @@ class Vehicle:
 
     def calc_loc(self):
         if self.leader:
-            return self.leader.loc -2 * self.miniGap - self.leader.length
+            return self.leader.loc - self.miniGap - self.leader.length
         return 0
 
     def start_sundden_braking(self):
@@ -45,8 +45,8 @@ class Vehicle:
         columns are a, v, loc
         indexes are simTime of each simluation step
         '''
-        self.delay = self.simTime / 1000 - (
-            self.loc - self.calc_loc()) / self.max_v
+        locdiff = (self.loc - self.calc_loc())
+        self.delay = self.simTime / 1000 - locdiff / self.max_v 
         self.h = 0
         if self.leader and self.v > 0:
             self.h = (self.leader.loc - self.loc) / self.v

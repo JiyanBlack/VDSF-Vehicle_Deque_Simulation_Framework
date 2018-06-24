@@ -19,7 +19,7 @@ class Platoon:
         lastUpdate = sorted(self.platoon[idx].records.keys())[-1]
         for idx in range(self.n):
             idxLoc = self.platoon[idx].records[lastUpdate][2]
+            self.records[idx] = self.platoon[idx].records
+            self.delays.append(self.platoon[idx].delay)
             if  idxLoc > 0:
-                self.records[idx] = self.platoon[idx].records
                 self.vehPass += 1
-                self.delays.append(self.platoon[idx].delay)
