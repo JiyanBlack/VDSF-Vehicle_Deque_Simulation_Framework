@@ -11,11 +11,12 @@ class Vehicle:
         # the position of vehicle, the position of the 1st vehicle's rear bumper is 0.
         # For vehicles in the queue, it is negative. For vehile across the stop line, it is positive.
         self.loc = self.calc_loc()
+        self.init_loc = self.calc_loc()
         self.a = 0  # acceleration, in m/s
         self.v = 0  # velocity, in m/s
         self.h = 0  # headway, in s
         self.records = {}
-        self.delay = -1
+        self.delay = 0
         self.follower = None
         self.prev_loc = 0
         self.time_pass_zero = None  # time passes loc = 0 point, in ms
@@ -26,7 +27,6 @@ class Vehicle:
         self.leader = leader
         if leader:
             leader.follower = self
-    
 
     def calc_loc(self):
         if self.leader:
@@ -45,14 +45,15 @@ class Vehicle:
         columns are a, v, loc
         indexes are simTime of each simluation step
         '''
-        locdiff = (self.loc - self.calc_loc())
-        self.delay = self.simTime / 1000 - locdiff / self.max_v 
+        locdiff = (self.loc - self.init_loc)
+        if locdiff > 0:
+            self.delay = (self.simTime / 1000 - locdiff / self.max_v) / locdiff
         self.h = 0
         if self.leader and self.v > 0:
             self.h = (self.leader.loc - self.loc) / self.v
-        records = [self.a, self.v, self.loc, self.h]
+        records = [self.a, self.v, self.loc, self.h, self.delay]
         self.records[self.simTime] = list(
-            map(lambda x: round(x, 3), records))
+            map(lambda x: round(x, 4), records))
         self.simTime += self.simulationStep
 
     def base_update(self):

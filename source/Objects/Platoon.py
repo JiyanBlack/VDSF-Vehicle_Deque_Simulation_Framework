@@ -20,6 +20,6 @@ class Platoon:
         for idx in range(self.n):
             idxLoc = self.platoon[idx].records[lastUpdate][2]
             self.records[idx] = self.platoon[idx].records
-            self.delays.append(self.platoon[idx].delay)
             if  idxLoc > 0:
                 self.vehPass += 1
+                self.delays.append(self.platoon[idx].delay)
