@@ -7,7 +7,7 @@ from Objects.IDMCar import IDMAV
 from Objects.IDMCar import IDMHumanVehicle
 from Objects.Gipps_Vehicle import Gipps_Vehicle
 import math
-
+import random
 
 class Simulation():
     def __init__(self, time, avStep=100):
@@ -63,6 +63,72 @@ class Simulation():
                 simulationStep=self.avStep,
                 leader=leader,
                 paras=paras)
+            p.add_vehicle(newcar)
+            leader = newcar
+        p.run(loop_num)
+        return p
+
+    def run_first_vehicle_simulation(self,n,paras, firstVeh):
+        loop_num = self.get_cav_loop_num(self.time)
+        p = Platoon()
+        leader = None
+        if firstVeh == 0:
+            newcar = IDMHumanVehicle(idx=0,
+                model=self.human,
+                simulationStep=self.avStep,
+                leader=leader,
+                paras=paras)
+        elif firstVeh == 1:
+            newcar = IDMAV(idx=0,
+                model=self.av,
+                simulationStep=self.avStep,
+                leader=leader,
+                paras=paras)
+        else:
+            newcar = CAV(idx=0,
+                model=self.cav,
+                simulationStep=self.avStep,
+                leader=leader,
+                paras=paras)
+        p.add_vehicle(newcar)
+        leader = newcar
+        for i in range(1,n):
+            rnd = random.random()
+            newcar = IDMHumanVehicle(idx=i,
+                model=self.human,
+                simulationStep=self.avStep,
+                leader=leader,
+                paras=paras)
+            p.add_vehicle(newcar)
+            leader = newcar
+        p.run(loop_num)
+        return p
+
+    def run_mixed_simulation(self,n,paras,ratio):
+        # ratio: (human, av, cav)
+        loop_num = self.get_cav_loop_num(self.time)
+        p = Platoon()
+        leader = None
+        for i in range(n):
+            rnd = random.random()
+            if rnd < ratio[0]:
+                newcar = IDMHumanVehicle(idx=i,
+                    model=self.human,
+                    simulationStep=self.avStep,
+                    leader=leader,
+                    paras=paras)
+            elif rnd >= ratio[0] and rnd < (ratio[0] + ratio[1]):
+                newcar = IDMAV(idx=i,
+                    model=self.av,
+                    simulationStep=self.avStep,
+                    leader=leader,
+                    paras=paras)
+            else:
+                newcar = CAV(idx=i,
+                    model=self.cav,
+                    simulationStep=self.avStep,
+                    leader=leader,
+                    paras=paras)
             p.add_vehicle(newcar)
             leader = newcar
         p.run(loop_num)
