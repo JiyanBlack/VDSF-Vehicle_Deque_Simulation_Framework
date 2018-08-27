@@ -21,5 +21,10 @@ class Platoon:
             idxLoc = self.platoon[idx].records[lastUpdate][2]
             self.records[idx] = self.platoon[idx].records
             if  idxLoc > 0:
+                # count vehicle passing
                 self.vehPass += 1
-                self.delays.append(self.platoon[idx].delay)
+        for i in range(2 * loop_num):
+            for idx in range(self.vehPass):
+                self.platoon[idx].update()
+        for idx in range(self.vehPass):
+            self.delays.append(self.platoon[idx].calc_delay())

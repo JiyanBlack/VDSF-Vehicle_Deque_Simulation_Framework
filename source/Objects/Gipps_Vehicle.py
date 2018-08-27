@@ -27,6 +27,7 @@ class Gipps_Vehicle(Vehicle):
             miniGap=miniGap,
             length=length)
         self.an = an
+        self.connected = False
         self.sn = sn
         self.vi = self.max_v  # indended speed, in m/s
         self.bn = -2 * self.an  # max deceleration

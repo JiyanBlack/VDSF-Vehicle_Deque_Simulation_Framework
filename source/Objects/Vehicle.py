@@ -16,7 +16,6 @@ class Vehicle:
         self.v = 0  # velocity, in m/s
         self.h = 0  # headway, in s
         self.records = {}
-        self.delay = 0
         self.follower = None
         self.prev_loc = 0
         self.time_pass_zero = None  # time passes loc = 0 point, in ms
@@ -39,19 +38,21 @@ class Vehicle:
     def stop_sundden_braking(self):
         self.maxBraking = False
 
+    def calc_delay(self):
+        if self.loc > 0:
+            locdiff = (self.loc - self.init_loc)
+            return (self.simTime / 1000 - locdiff / self.max_v) / (locdiff/1000)
+
     def writeInfo(self):
         '''
         write current vehicle info to a python dictionary, 
         columns are a, v, loc
         indexes are simTime of each simluation step
         '''
-        locdiff = (self.loc - self.init_loc)
-        if locdiff > 0:
-            self.delay = (self.simTime / 1000 - locdiff / self.max_v) / locdiff
         self.h = 0
         if self.leader and self.v > 0:
             self.h = (self.leader.loc - self.loc) / self.v
-        records = [self.a, self.v, self.loc, self.h, self.delay]
+        records = [self.a, self.v, self.loc, self.h]
         self.records[self.simTime] = list(
             map(lambda x: round(x, 4), records))
         self.simTime += self.simulationStep

@@ -68,37 +68,30 @@ class Simulation():
         p.run(loop_num)
         return p
 
-    def run_first_vehicle_simulation(self,n,paras, firstVeh):
+    def run_nth_vehicle_simulation(self,n,paras, vehtype, nth = 0):
         loop_num = self.get_cav_loop_num(self.time)
         p = Platoon()
         leader = None
-        if firstVeh == 0:
-            newcar = IDMHumanVehicle(idx=0,
-                model=self.human,
-                simulationStep=self.avStep,
-                leader=leader,
-                paras=paras)
-        elif firstVeh == 1:
-            newcar = IDMAV(idx=0,
-                model=self.av,
-                simulationStep=self.avStep,
-                leader=leader,
-                paras=paras)
-        else:
-            newcar = CAV(idx=0,
-                model=self.cav,
-                simulationStep=self.avStep,
-                leader=leader,
-                paras=paras)
-        p.add_vehicle(newcar)
-        leader = newcar
-        for i in range(1,n):
-            rnd = random.random()
-            newcar = IDMHumanVehicle(idx=i,
-                model=self.human,
-                simulationStep=self.avStep,
-                leader=leader,
-                paras=paras)
+        for i in range(0,n):
+            if i == nth:
+                if vehtype == 1:
+                    newcar = IDMAV(idx=0,
+                        model=self.av,
+                        simulationStep=self.avStep,
+                        leader=leader,
+                        paras=paras)
+                elif vehtype == 2:
+                    newcar = CAV(idx=0,
+                        model=self.cav,
+                        simulationStep=self.avStep,
+                        leader=leader,
+                        paras=paras)
+            else:
+                newcar = IDMHumanVehicle(idx=i,
+                    model=self.human,
+                    simulationStep=self.avStep,
+                    leader=leader,
+                    paras=paras)
             p.add_vehicle(newcar)
             leader = newcar
         p.run(loop_num)

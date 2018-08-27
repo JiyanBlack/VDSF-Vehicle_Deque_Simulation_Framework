@@ -5,6 +5,7 @@ class IDMHumanVehicle(Vehicle):
         super().__init__(idx, leader, simulationStep, max_v=paras['v_intend'])
         self.T = paras['human_T'] # bumper-to-bumper headway to keep
         self.model = model
+        self.connected = False
         self.vi = self.max_v  # intended speed in m/s, not km/h
         self.max_acc = paras['human_max_acc']  # maximum acceleration capacity
         self.max_dec = paras['human_max_dec']  # maximum deceleration capacity
@@ -27,6 +28,7 @@ class IDMAV(Vehicle):
         super().__init__(idx, leader, simulationStep, max_v=paras['v_intend'])
         self.T = paras['AV_T'] # bumper-to-bumper headway to keep
         self.model = model
+        self.connected = False
         self.vi = self.max_v  # intended speed in m/s, not km/h
         self.max_acc = paras['max_acc']  # maximum acceleration capacity
         self.max_dec = paras['max_dec']  # maximum deceleration capacity

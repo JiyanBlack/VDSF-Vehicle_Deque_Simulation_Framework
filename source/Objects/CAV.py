@@ -5,6 +5,7 @@ class CAV(Vehicle):
         super().__init__(idx, leader, simulationStep, max_v=paras['v_intend'])
         self.tsys = paras['tsys']  # system response time setting for autonomous vehicles in eq6
         self.model = model
+        self.connected = True
         self.vi = self.max_v  # intended speed in m/s, not km/h
         self.max_acc = paras['max_acc']  # maximum acceleration capacity
         self.max_dec = paras['max_dec']  # maximum deceleration capacity
